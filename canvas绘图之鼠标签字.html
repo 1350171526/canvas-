@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+		<canvas id="canvas" width="500" height="500"></canvas>
+	</body>
+	<script>
+		let painting = false;
+		let startPoint = { x: undefined, y: undefined };
+
+		const canvas = document.getElementById("canvas");
+		const ctx = canvas.getContext("2d");
+
+		canvas.onmousedown = (e) => {
+			let x = e.offsetX;
+			let y = e.offsetY;
+			startPoint = { x: x, y: y };
+			painting = true;
+		};
+
+		canvas.onmousemove = (e) => {
+			let x = e.offsetX;
+			let y = e.offsetY;
+			let newPoint = { x: x, y: y };
+			if (painting) {
+				drawLine(startPoint.x, startPoint.y, newPoint.x, newPoint.y);
+				startPoint = newPoint;
+			}
+		};
+		canvas.onmouseup = () => {
+			painting = false;
+		};
+		function drawLine(xStart, yStart, xEnd, yEnd) {
+			ctx.beginPath();
+			ctx.LineWidth = 3;
+			ctx.moveTo(xStart, yStart);
+			ctx.lineTo(xEnd, yEnd);
+			ctx.stroke();
+			ctx.closePath();
+		}
+	</script>
+	<style>
+		#canvas {
+			background-color: rgb(66, 78, 72);
+			border-radius: 10px;
+			margin: 0 auto;
+		}
+		body {
+			width: 100vw;
+			height: 100vh;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background-image: url();
+		}
+	</style>
+</html>

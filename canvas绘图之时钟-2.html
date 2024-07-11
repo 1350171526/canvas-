@@ -1,0 +1,103 @@
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+<meta charset="UTF-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1.0">  
+<title>Canvas Clock</title>  
+<style>  
+  body { display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }  
+  canvas { border: 1px solid #ccc; }  
+</style>  
+</head>  
+<body>  
+<canvas id="clock"></canvas>  
+<script>
+  const canvas = document.getElementById('clock');  
+  const ctx = canvas.getContext('2d');  
+    
+  canvas.width = 300;  
+  canvas.height = 300;  
+    
+  function drawClockFace() {  
+    // 绘制时钟面  
+    ctx.beginPath();  
+    ctx.arc(150, 150, 140, 0, 2 * Math.PI);  
+    ctx.fillStyle = '#ffffff';  
+    ctx.fill();  
+    
+    // 绘制刻度  
+    for (let i = 0; i < 12; i++) {  
+      let angle = (i / 12) * 2 * Math.PI;  
+      let x = 150 + 120 * Math.sin(angle);  
+      let y = 150 - 120 * Math.cos(angle); // 注意这里我们使用 -cos 来确保12点在上方  
+    
+      if (i % 3 === 0) {  
+        ctx.fillStyle = '#000';  
+        ctx.font = '15px Arial';  
+        ctx.textAlign = 'center'; // 确保数字在刻度线中间  
+        ctx.fillText(i.toString(), x, y + 5); // 稍微调整位置以适应字体大小  
+      }  
+    
+      ctx.beginPath();  
+      ctx.moveTo(150, 150);  
+      ctx.lineTo(x, y);  
+      ctx.strokeStyle = '#000';  
+      ctx.lineWidth = 2;  
+      ctx.stroke();  
+    }  
+    
+    // 绘制中心点  
+    ctx.beginPath();  
+    ctx.arc(150, 150, 5, 0, 2 * Math.PI);  
+    ctx.fillStyle = '#000';  
+    ctx.fill();  
+  }  
+    
+  function drawClockHands() {  
+    let now = new Date();  
+    let seconds = now.getSeconds();  
+    let minutes = now.getMinutes();  
+    let hours = now.getHours();  
+    hours = hours % 12;  
+    hours = hours ? hours : 12; 
+    // console.log(hours,minutes,seconds);
+    // 秒针  
+    ctx.beginPath();  
+    ctx.moveTo(150, 150);  
+    ctx.lineTo(150 + 80 * Math.sin(seconds * Math.PI / 30),  
+              150 - 80 * Math.cos(seconds * Math.PI / 30));  
+    ctx.lineWidth = 4;  
+    ctx.strokeStyle = 'red';  
+    ctx.stroke();  
+    
+    // 分针  
+    ctx.beginPath();  
+    ctx.moveTo(150, 150);  
+    ctx.lineTo(150 + 60 * Math.sin(minutes * Math.PI / 30 + seconds * Math.PI / 1800),  
+              150 - 60 * Math.cos(minutes * Math.PI / 30 + seconds * Math.PI / 1800));  
+    ctx.lineWidth = 6;  
+    ctx.strokeStyle = 'black';  
+    ctx.stroke();  
+    
+    // 时针  
+    ctx.beginPath();  
+    ctx.moveTo(150, 150);  
+    ctx.lineTo(150 + 40 * Math.sin((hours % 12 + minutes / 60) * Math.PI / 6),  
+              150 - 40 * Math.cos((hours % 12 + minutes / 60) * Math.PI / 6));  
+    ctx.lineWidth = 8;  
+    ctx.strokeStyle = 'blue';  
+    ctx.stroke();  
+  }  
+    
+  function updateClock() {  
+    ctx.clearRect(0, 0, canvas.width, canvas.height);  
+    drawClockFace();  
+    drawClockHands();  
+    requestAnimationFrame(updateClock);  
+  }  
+    
+  // 初始化时钟  
+  updateClock();
+</script>  
+</body>  
+</html>
